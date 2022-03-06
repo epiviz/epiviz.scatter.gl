@@ -1,0 +1,27 @@
+{
+  "name": "epiviz.scatter.gl",
+  "version": "0.1.0",
+  "main": "dist/esgl.js",
+  "module": "dist/index.js",
+  "browser": "dist/esgl.umd.js",
+  "dependencies": {
+    "epiviz.gl": "^1.0.3"
+  },
+  "devDependencies": {
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-commonjs": "^11.0.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^7.0.0",
+    "@surma/rollup-plugin-off-main-thread": "^2.2.3",
+    "rollup": "^1.29.0"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "node test/test.js",
+    "pretest": "npm run build"
+  },
+  "files": [
+    "dist"
+  ]
+}
