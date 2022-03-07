@@ -1,6 +1,6 @@
 # epiviz.scatter.gl
 
-A fast and scalable WebGL2 based rendering library for visualizing scatter/dot plots. The library uses [epiviz.gl](https://github.com/epiviz/epiviz.gl) under the hood and provides an easier interface for use in various applications. 
+A fast and scalable WebGL2 based rendering library for visualizing scatter/dot plots. The library uses [epiviz.gl](https://github.com/epiviz/epiviz.gl) under the hood and provides an easier interface for use in various applications.
 
 Internally, the library creates two WebWorkers
 
@@ -9,8 +9,9 @@ Internally, the library creates two WebWorkers
 
 `epiviz.gl` uses [OffScreenCanvas](https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas) to delegate rendering to a worker. since the main thread of the browser is less busy, this provides a fluid, high-performance user experience for applications.
 
-## Getting started
+![Demo](./assets/epiviz.scatter.gl-demo.gif)
 
+## Getting started
 
 ### Installation
 
@@ -21,18 +22,17 @@ Internally, the library creates two WebWorkers
 ### Usage
 
 - [app/index.html](./app/index.html) provides an easier example and code on how to use the library
-- check usage in [Kana](ww.github.com/jkanche/kana), for how to use the component in a react application.
-
+- If you want to use the library in a react app, check usage in [Kana](ww.github.com/jkanche/kana)
 
 #### Simple usage:
 
 ```js
     import ScatterGL from "epiviz.scatter.gl";
-    
+
     # you can either pass in a dom selector or HTMLElement
     let plot = new ScatterGL(".canvas");
 
-    # provide input data to the element, 
+    # provide input data to the element,
     # data must contain x and y coordinates
     plot.setInput({
         x: [...],
@@ -45,7 +45,7 @@ Internally, the library creates two WebWorkers
 
 ### Advanced Usage
 
-The library provides methods to capture events and modify attributes - 
+The library provides methods to capture events and modify attributes -
 
 #### Interaction modes
 
@@ -55,11 +55,9 @@ Supports three modes
 - `box` - box selections, no pan but allows zoom (`wheel`)
 - `lasso` - same as box, no pan but allows zoom (`wheel`)
 
-
 ```js
-    setInteraction(mode);
+setInteraction(mode);
 ```
-
 
 #### Events
 
@@ -67,24 +65,24 @@ Supports three modes
 - clickCallback
 - selectionCallback
 
-***hover and click also provide the distance of the point from the mouse location. This metric can be used to enable various interactions.***
-
+**_hover and click also provide the distance of the point from the mouse location. This metric can be used to enable various interactions._**
 
 ```js
-    plot.hoverCallback = function (point) {
-      if (point) {
-        //   use some threshold (1.5)
-        if (point.distance <= 1.5) {
-            console.log(`${point} is closest`)
-        }
-      }
-    };
+plot.hoverCallback = function (point) {
+  if (point) {
+    //   use some threshold (1.5)
+    if (point.distance <= 1.5) {
+      console.log(`${point} is closest`);
+    }
+  }
+};
 
-    plot.selectionCallback = function (points) {
-        // ... do something ...
-        console.log(points);
-    };
+plot.selectionCallback = function (points) {
+  // ... do something ...
+  console.log(points);
+};
 ```
+
 #### other attributes
 
 - colors - a fixed color or an array of colors (using rgb/hex codes)
@@ -92,5 +90,5 @@ Supports three modes
 - opacity - opacity across the entire plot
 
 ```js
-    plot.setState(3, "red", 0.5);
+plot.setState(3, "red", 0.5);
 ```
