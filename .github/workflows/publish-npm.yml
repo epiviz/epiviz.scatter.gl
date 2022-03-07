@@ -19,7 +19,7 @@ jobs:
         run: yarn install
 
       - name: create builds
-        run: npm run build-lib
+        run: yarn build
 
       - name: Publish to NPM
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}

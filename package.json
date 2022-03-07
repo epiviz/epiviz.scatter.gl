@@ -5,7 +5,7 @@
   "module": "dist/index.js",
   "browser": "dist/esgl.umd.js",
   "dependencies": {
-    "epiviz.gl": "^1.0.3"
+    "epiviz.gl": "^1.0.4"
   },
   "devDependencies": {
     "@rollup/plugin-babel": "^5.3.1",
