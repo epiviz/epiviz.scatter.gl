@@ -7397,19 +7397,34 @@ class ScatterGL {
       ],
     };
 
-    if (Array.isArray(this.state.color)) {
-      spec.defaultData.color = this.state.color;
-      spec.tracks[0].color = {
-        attribute: "color",
-        type: "inline",
-      };
-    } else {
-      spec.tracks[0].color = {
-        value: this.state.color ? this.state.color : "#3182bd",
-      };
+    this._generateSpecForEncoding(spec, "color", this.state.color);
+    this._generateSpecForEncoding(spec, "size", this.state.size);
+    this._generateSpecForEncoding(spec, "opacity", this.state.opacity);
+
+    if ("shape" in this.state) {
+      this._generateSpecForEncoding(spec, "shape", this.state.shape);
     }
 
     return spec;
+  }
+
+  _generateSpecForEncoding(spec, attribute, value) {
+    if (Array.isArray(value)) {
+
+      if (value.length !== spec.defaultData[Object.keys(spec.defaultData)[0]].length) {
+        throw `length of ${value} not the same as the length of data: needs to be ${spec.defaultData[Object.keys(spec.defaultData)[0]].length}`
+      }
+
+      spec.defaultData[attribute] = value;
+      spec.tracks[0][attribute] = {
+        attribute: attribute,
+        type: "inline",
+      };
+    } else {
+      spec.tracks[0][attribute] = {
+        value: value ? value : this.state[attribute],
+      };
+    }
   }
 
   calcBounds() {
@@ -7454,17 +7469,21 @@ class ScatterGL {
     }
   }
 
-  setState(size, color, opacity) {
-    if (size) {
-      this.state["size"] = size;
+  setState(encoding) {
+    if ("size" in encoding) {
+      this.state["size"] = encoding["size"];
     }
 
-    if (color) {
-      this.state["color"] = color;
+    if ("color" in encoding) {
+      this.state["color"] = encoding["color"];
     }
 
-    if (opacity) {
-      this.state["opacity"] = opacity;
+    if ("opacity" in encoding) {
+      this.state["opacity"] = encoding["opacity"];
+    }
+
+    if ("shape" in encoding) {
+      this.state["shape"] = encoding["shape"];
     }
   }
 
@@ -7479,6 +7498,7 @@ class ScatterGL {
   render() {
     var self = this;
     let spec = this.generateSpec();
+
     if (this._renderCount == 0) {
       this.plot.setSpecification(spec);
 

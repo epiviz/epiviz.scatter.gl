@@ -120,11 +120,17 @@
     </div>
   </div>
   <script type="module">
-    import ScatterGL from "../dist/index.js";
-    import { data, color } from './app/data.js';
+    // import ScatterGL from "../dist/index.js";
+    // import { data } from '../app/iris.js';
+
+    import ScatterGL from "./index.js";
+    import { data, color } from './iris.js';
 
     let plot = new ScatterGL(".canvas");
-    plot.setInput(data);
+    plot.setInput({
+      "x": data.sepal_width.map(x => parseFloat(x)),
+      "y": data.sepal_length.map(x => parseFloat(x))
+    });
 
     plot.hoverCallback = function (point) {
       if (point) {
@@ -149,8 +155,9 @@
     };
 
     plot.setState({
-      "size": 1,
-      color,
+      "size": data.species.map(x => x === "Iris-setosa" ? 2 : 2),
+      "shape": data.species.map(x => x === "Iris-setosa" ? "triangle" : "circle"),
+      "color": data.species.map(x => x === "Iris-setosa" ? "orange" : "blue"),
       "opacity": 0.7
     });
 
