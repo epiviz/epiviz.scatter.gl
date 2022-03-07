@@ -83,12 +83,24 @@ plot.selectionCallback = function (points) {
 };
 ```
 
-#### other attributes
+#### Encodings
 
-- colors - a fixed color or an array of colors (using rgb/hex codes)
+<img src="./assets/iris.png" width=200 alt="iris dataset encoding various attributes">
+
+***checkout the example for [Iris dataset](./app/iris.html)***
+
+These attributes either take a fixed value or an array of values for each data point.
+
+- colors - color/rgb/hex code
 - size - size of each dot
 - opacity - opacity across the entire plot
+- shape - supports, circles, triangle and squares
 
 ```js
-plot.setState(3, "red", 0.5);
+  plot.setState({
+    size: <SIZE>
+    color: <COLOR>
+    shape: <SHAPE>,
+    opacity: <OPACITY>
+  });
 ```
