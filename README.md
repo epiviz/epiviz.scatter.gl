@@ -15,6 +15,8 @@ Internally, the library creates two WebWorkers
 
 ### Installation
 
+package is available through [npm](https://www.npmjs.com/package/epiviz.scatter.gl)
+
 ```sh
     npm install epiviz.scatter.gl
 ```
