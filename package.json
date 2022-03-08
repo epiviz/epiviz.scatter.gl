@@ -1,9 +1,24 @@
 {
   "name": "epiviz.scatter.gl",
   "version": "0.0.2",
+  "repository": "https://github.com/jkanche/epiviz.scatter.gl",
+  "homepage": "https://github.com/jkanche/epiviz.scatter.gl",
+  "author": {
+    "name": "Jayaram Kancherla",
+    "email": "jayaram.kancherla@gmail.com",
+    "url": "https://www.jkanche.com"
+  },
+  "bugs": "https://github.com/jkanche/epiviz.scatter.gl/issues",
+  "keywords": [
+    "scatter plot",
+    "visualization",
+    "webgl",
+    "webworkers"
+  ],
+  "license": "MIT",
+  "type": "module",
   "main": "dist/esgl.js",
   "module": "dist/index.js",
-  "browser": "dist/esgl.umd.js",
   "dependencies": {
     "epiviz.gl": "^1.0.4"
   },

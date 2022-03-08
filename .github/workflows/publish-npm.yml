@@ -33,7 +33,7 @@ jobs:
           clean: true # Automatically remove deleted files from the deploy branch
 
       - name: Publish to NPM
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        if: ${{ github.event_name == 'push' }}
         run: npm publish || true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
