@@ -103,7 +103,7 @@ class ScatterGL {
   calcBounds() {
     // set boundaries to create a squarish plot
     // aspect ratio for scatter plots
-    const aspRatio = this.elem.clientWidth / this.elem.clientHeight;
+    let aspRatio = this.elem.clientWidth / this.elem.clientHeight;
 
     if (!Number.isFinite(aspRatio)) {
       aspRatio = 1;
