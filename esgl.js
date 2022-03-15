@@ -78,12 +78,12 @@ class ScatterGL {
           x: {
             attribute: "x",
             type: "quantitative",
-            domain: [-xBound, xBound],
+            domain: xBound,
           },
           y: {
             attribute: "y",
             type: "quantitative",
-            domain: [-yBound, yBound],
+            domain: yBound,
           },
           size: { value: this.state.size ? this.state.size : 3 },
           opacity: { value: this.state.opacity ? this.state.opacity : 0.8 },
@@ -130,13 +130,15 @@ class ScatterGL {
       aspRatio = 1;
     }
 
-    let xBound = Math.max(...this.xDomain.map((a) => Math.abs(a)));
-    let yBound = Math.max(...this.yDomain.map((a) => Math.abs(a)));
+    let xBound = this.xDomain;
+    // Math.max(...this.xDomain.map((a) => Math.abs(a)));
+    let yBound = this.yDomain;
+    // Math.max(...this.yDomain.map((a) => Math.abs(a)));
 
     if (aspRatio > 1) {
-      xBound = xBound * aspRatio;
+      xBound = xBound.map(x => x * aspRatio);
     } else {
-      yBound = yBound / aspRatio;
+      yBound = yBound.map(x => x / aspRatio);
     }
 
     return { xBound, yBound };
@@ -152,15 +154,19 @@ class ScatterGL {
       this.input = { ...this.input, ...data };
 
       // calc min and max
-      const xMinMax = getMinMax(this.input.x);
-      const yMinMax = getMinMax(this.input.y);
+      let xMinMax = getMinMax(this.input.x);
+      let yMinMax = getMinMax(this.input.y);
+
+      xMinMax = xMinMax.map((x, i) => x === 0 ? (Math.pow(-1, i + 1) * (xMinMax[i + 1 % 2] * 0.05)) : x);
+      yMinMax = yMinMax.map((x, i) => x === 0 ? (Math.pow(-1, i + 1) * (yMinMax[i + 1 % 2] * 0.05)) : x);
+
       this.xDomain = [
-        xMinMax[0] - Math.abs(0.25 * xMinMax[0]),
-        xMinMax[1] + Math.abs(0.25 * xMinMax[1]),
+        xMinMax[0] - Math.abs(0.05 * xMinMax[0]),
+        xMinMax[1] + Math.abs(0.05 * xMinMax[1]),
       ];
       this.yDomain = [
-        yMinMax[0] - Math.abs(0.25 * yMinMax[0]),
-        yMinMax[1] + Math.abs(0.25 * yMinMax[1]),
+        yMinMax[0] - Math.abs(0.05 * yMinMax[0]),
+        yMinMax[1] + Math.abs(0.05 * yMinMax[1]),
       ];
     } else {
       throw `input data should contain x and y attributes`;
@@ -193,75 +199,76 @@ class ScatterGL {
     this.plot.setViewOptions({ tool: mode });
   }
 
-  render() {
+  resize(width, height) {
+    this.plot.setCanvasSize(
+      width, height
+    );
+
+    // this.render();
+
+    // this.plot.setSpecification(spec);
+  }
+
+  attachResizeEvent() {
     var self = this;
-    let spec = this.generateSpec();
+    // set window timesize event once
+    let resizeTimeout;
+    window.addEventListener("resize", () => {
+      // similar to what we do in epiviz
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+      }
+
+      resizeTimeout = setTimeout(() => {
+        self.resize(self.elem.parentNode.clientWidth, self.elem.parentNode.clientHeight);
+      }, 500);
+    });
+  }
+
+
+  render(width, height) {
+    var self = this;
+    this._spec = this.generateSpec();
+
+    if (width) {
+      this._spec.width = width;
+    }
+
+    if (height) {
+      this._spec.height = height;
+    }
 
     if (this._renderCount == 0) {
-      this.plot.setSpecification(spec);
-
-      // set window timesize event once
-      let resizeTimeout;
-      window.addEventListener("resize", () => {
-        // similar to what we do in epiviz
-        if (resizeTimeout) {
-          clearTimeout(resizeTimeout);
-        }
-
-        resizeTimeout = setTimeout(() => {
-          self.plot.setCanvasSize(
-            self.elem.parentNode.clientWidth,
-            self.elem.parentNode.clientHeight
-          );
-
-          const { xBound, yBound } = self.calcBounds();
-
-          spec["tracks"][0].x.domain = [-xBound, xBound];
-          spec["tracks"][0].y.domain = [-yBound, yBound];
-
-          self.plot.setSpecification(spec);
-        }, 500);
-      });
+      this.plot.setSpecification(this._spec);
     } else {
-      this.plot.updateSpecification(spec);
+      this.plot.updateSpecification(this._spec);
     }
 
     this.plot.addEventListener("pointHovered", (e) => {
       const hdata = e.detail.data;
       e.preventDefault();
 
-      if ("distance" in hdata && hdata.distance <= 1.5) {
-        self.hoverCallback(hdata);
-      } else {
-        self.hoverCallback(null);
-      }
+      self.hoverCallback(hdata);
     });
 
     this.plot.addEventListener("pointClicked", (e) => {
       e.preventDefault();
 
       const hdata = e.detail.data;
-      if ("distance" in hdata && hdata.distance <= 1.5) {
-        self.clickCallback(hdata);
-      } else {
-        self.clickCallback(null);
-      }
+      self.clickCallback(hdata);
     });
   }
 
   // events
   selectionCallback(pointIdxs) {
-    console.info(pointIdxs);
     return pointIdxs;
   }
 
   clickCallback(pointIdx) {
-    console.info(pointIdx);
     return pointIdx;
   }
 
   hoverCallback(pointIdx) {
-    console.info(pointIdx);
     return pointIdx;
   }
 }
