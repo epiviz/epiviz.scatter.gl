@@ -7432,6 +7432,10 @@ class ScatterGL {
     // aspect ratio for scatter plots
     const aspRatio = this.elem.clientWidth / this.elem.clientHeight;
 
+    if (!Number.isFinite(aspRatio)) {
+      aspRatio = 1;
+    }
+
     let xBound = Math.max(...this.xDomain.map((a) => Math.abs(a)));
     let yBound = Math.max(...this.yDomain.map((a) => Math.abs(a)));
 
@@ -7503,6 +7507,7 @@ class ScatterGL {
       this.plot.setSpecification(spec);
 
       // set window timesize event once
+      let resizeTimeout;
       window.addEventListener("resize", () => {
         // similar to what we do in epiviz
         if (resizeTimeout) {
